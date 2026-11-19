@@ -36,6 +36,28 @@ def same_apartment(old, new):
     )
 
 
+def validate_apartment(row):
+    problems = []
+
+    if row["area_m2"] <= 0:
+        problems.append("площадь должна быть больше нуля")
+
+    if row["asking_price_rub"] <= 0:
+        problems.append("цена предложения должна быть больше нуля")
+
+    if row["asking_price_per_m2_rub"] <= 0:
+        problems.append("цена за м² должна быть больше нуля")
+
+    if not 1 <= row["floor"] <= row["floors_total"]:
+        problems.append("этаж должен быть от 1 до общего числа этажей")
+
+    original_price = row["original_price_rub"]
+    if original_price is not None and original_price <= row["asking_price_rub"]:
+        problems.append("цена до скидки должна быть выше цены предложения")
+
+    return problems
+
+
 def main():
     parser = argparse.ArgumentParser(description="Сбор квартир из двух каталогов ФСК")
     parser.add_argument("snapshots", type=Path, help="Папка с двумя HTML-снимками")
@@ -60,6 +82,11 @@ def main():
 
         for row in rows:
             key = apartment_key(row)
+
+            problems = validate_apartment(row)
+            if problems:
+                issues.append(f"{key}: {'; '.join(problems)}")
+                continue
             candidates = original.get(key, [])
             if any(same_apartment(old, row) for old in candidates):
                 counts["дубли с исходным"] += 1

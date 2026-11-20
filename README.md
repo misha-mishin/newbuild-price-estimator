@@ -6,7 +6,7 @@
 «Архитектор». Нужны Python 3.10+ и `curl`; сторонние библиотеки не требуются.
 Команды запускаются из корня репозитория.
 
-Снимки страниц сохранены в `data/snapshots/2026-11-19/`. Чтобы повторить
+Снимки страниц сохранены в [`data/snapshots/2026-11-19/`](data/snapshots/2026-11-19/). Чтобы повторить
 разбор без скачивания:
 
 ```bash
@@ -36,7 +36,7 @@ python src/collect_fsk.py "$d" "$(TZ=Europe/Moscow date +%F)"
 предложения. При ошибке проверки или спорном совпадении сборщик указывает
 проблемную квартиру и не записывает CSV.
 
-Результат - `data/collected/newbuild_prices_fsk_projects.csv` в схеме
+Результат - [`data/collected/newbuild_prices_fsk_projects.csv`](data/collected/newbuild_prices_fsk_projects.csv) в схеме
 исходного файла. Чтобы пересобрать его, сначала удалите существующий файл.
 
 Результат на снимках от 19.11.2026: 39 новых записей (Симоновский Вал - 19,
@@ -67,7 +67,7 @@ python src/collect_fsk.py "$d" "$(TZ=Europe/Moscow date +%F)"
 
 ## Исследование данных
 
-Ноутбук `notebooks/eda.ipynb` объединяет исходные и собранные объявления,
+Ноутбук [`notebooks/eda.ipynb`](notebooks/eda.ipynb) объединяет исходные и собранные объявления,
 проверяет дубликаты, пропуски, площадь, этажи и цены, а также показывает
 распределение цены за м² и сравнение по застройщикам и комнатности.
 
@@ -80,7 +80,7 @@ python src/collect_fsk.py "$d" "$(TZ=Europe/Moscow date +%F)"
 Откройте `notebooks/eda.ipynb` в VS Code, выберите ядро из `.venv`
 и выполните `Run All`.
 
-При запуске `notebooks/eda.ipynb` создаётся локальный файл
+При запуске [`notebooks/eda.ipynb`](notebooks/eda.ipynb) создаётся локальный файл
 `data/processed/newbuild_prices_clean.csv` — 843 объявления из 42 ЖК.
 Файл собирается из двух входных CSV и не включается в репозиторий.
 

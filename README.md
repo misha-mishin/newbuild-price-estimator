@@ -1,5 +1,70 @@
 # Newbuild Price Estimator
 
+Воспроизводимый ML-пайплайн для прогноза цены предложения за м² в новостройках
+на основе открытых каталогов ПИК, ГК ФСК и Level Group.
+
+Подробные результаты экспериментов, разбор ошибок и отклонений — в [`report.md`](report.md).
+
+## Быстрый старт
+
+Требуется Python 3.10+ (проект проверен на macOS M1 Pro, CPU).
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Обучение финальной модели
+
+Обучает выбранную конфигурацию CatBoost (`depth=3`, `learning_rate=0.1866`, `iterations=15`, `seed=42`)
+на всей очищенной выборке (`843` строки) и сохраняет артефакт в `models/catboost_full.cbm`
+(отдельно от модели, оценивавшейся на групповом тесте):
+
+```bash
+python train.py
+```
+
+### Прогноз на новых квартирах
+
+Загружает `models/catboost_full.cbm` и записывает прогноз в столбец `predicted_price_per_m2_rub`
+без переобучения модели:
+
+```bash
+python predict.py --input data/sample_input.csv --output predictions.csv
+```
+
+**Обязательные столбцы входного CSV:** `developer`, `rooms` (`0` = студия), `area_m2`, `floor`.
+Дополнительные столбцы (например, `project`, `floors_total`, `finish`) сохраняются в выходном файле,
+но моделью не используются. Допустимы пропуски в числовых признаках и неизвестные значения `developer`
+(заменяются на `"Не указано"`). Ценовые поля подавать не нужно.
+
+## Структура проекта
+
+```text
+newbuild-price-estimator/
+├── data/
+│   ├── raw/          # исходный CSV и словарь полей
+│   ├── collected/    # 39 новых объявлений ГК ФСК
+│   ├── processed/    # очищенная объединённая выборка (843 строки)
+│   ├── snapshots/    # сохранённые HTML-снимки каталогов ФСК
+│   └── sample_input.csv
+├── models/
+│   └── catboost_full.cbm
+├── notebooks/
+│   ├── eda.ipynb
+│   └── modeling.ipynb
+├── src/
+│   ├── collect_fsk.py
+│   ├── parse_fsk_project.py
+│   └── preprocessing.py
+├── train.py
+├── predict.py
+├── requirements.txt
+├── README.md
+└── report.md
+```
+
 ## Сбор новых объявлений
 
 Данные дополнены двумя публичными каталогами ГК ФСК: «Симоновский Вал» и

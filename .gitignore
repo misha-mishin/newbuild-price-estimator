@@ -10,5 +10,6 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# Данные: исходные и собранные хранятся в репозитории, производные - нет
-/data/processed/
+# Временные файлы прогнозов
+predictions.csv
+data/sample_predictions.csv
